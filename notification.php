@@ -3,7 +3,7 @@
  *  @file
  *  Brief description of what the file does, along with the project's name
  * 
- *  @copyright 2013 Savoir-faire Linux, inc.
+ *  @copyright 2014 Savoir-faire Linux, inc.
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by

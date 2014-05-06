@@ -4,16 +4,20 @@
 
 0) Préalables
 
-	- Installer sur la même machine que SOPlanning
-	- Avoir un serveur de mail configuré sur le port 25
-	- Configuration SOPlanning essentielle: Paramètres > Configuration SMTP
-		IMPORTANT - Spécifier l'adresse du serveur, probablement localhost
-		IMPORTANT - Spécifier le port, probablement 25
-		Le champ "adresse d'expédition" n'est pas requis pour nos besoins du moment.
+Installer sur la même machine que SOPlanning
+
+Avoir un serveur de mail configuré sur le port 25
+
+Configuration SOPlanning essentielle: Paramètres > Configuration SMTP
+	IMPORTANT - Spécifier l'adresse du serveur, probablement localhost
+	IMPORTANT - Spécifier le port, probablement 25
+	Le champ "adresse d'expédition" n'est pas requis pour nos besoins du moment.
+
 
 1) Créer la table dans la BD
 
-	- Manuellement à partir de sql/planning_courriel.sql
+Manuellement, à partir de sql/planning_courriel.sql
+
 
 2) Copier config.example.inc dans config.inc et ajuster les paramètres.
 
@@ -38,8 +42,10 @@
 
 3) Rouler un premier "dry run" pour initialiser la BD
 
-	Il ne faudrait pas envoyer un milliard de courriels à cause des entrées passées !
+Il ne faudrait pas envoyer un milliard de courriels à cause des entrées passées !
+Ajoutez le paramètre --no-email pour mettre à jour la BD sans envoyer de courriel.
 
-	$ php5 notification.php --no-email
+$ php5 notification.php --no-email
 
-4) Configurer la cron job
+
+4) Configurer la cron job, au goût.
