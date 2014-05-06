@@ -58,8 +58,6 @@ if(isset($_GET['--help'])){
 define('ENABLE_EMAIL', ! isset($_GET['--no-email']) );
 
 
-
-
 function get_periodes_courriel(){
 	/*
 	Liste des périodes sujettes à un avertissement par courriel.
@@ -165,7 +163,7 @@ function send_periodes_courriels(){
 				"INSERT INTO planning_courriel "
 						. "(periode_id, ts_courriel) "
 					. "VALUES "
-					."	(%s,CURRENT_TIMESTAMP()) "
+						. "(%s,CURRENT_TIMESTAMP()) "
 			  	. "ON DUPLICATE KEY UPDATE ts_courriel=CURRENT_TIMESTAMP();",
 			  	$row_periode->periode_id);
 			if(DEBUG){
