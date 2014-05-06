@@ -1,0 +1,24 @@
+#
+# Mise en place initiale
+#
+
+1) Créer la table dans la BD
+
+	- Manuellement à partir de sql/planning_courriel.sql
+
+2) Copier config.example.inc dans config.inc et ajuster les paramètres.
+
+	- SOPLANNING_PATH
+		Chemin vers le répertoire racine de soplanning.
+		Peut être relatif ou absolu, à votre guise.
+
+	- SOPLANNING_NOTIFICATION_INTERVAL
+		Délai de sûreté pour détecter les entrées qui ont changé.
+		Au format d'intervale MySQL : 10 MINUTE'... '6 HOUR'... '1 DAY'... etc.
+		Voir http://dev.mysql.com/doc/refman/5.5/en/date-and-time-functions.html
+
+3) Rouler un premier "dry run" pour initialiser la BD
+
+	- Il ne faudrait pas envoyer un milliard de courriels à cause des entrées passées !
+
+4) Configurer la cron job

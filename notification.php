@@ -41,18 +41,13 @@ while($configTemp = db_fetch_array($configs)) {
 }
 
 
-// FORMAT: ID du projet => courriel du responsable
-// TODO: this could be stored in soplanning config
-$watched_projets = array(
-	'abs' => 'sylvain.bouchard@savoirfairelinux.com'
-);
-
 function get_periodes_courriel(){
 	/*
 	Liste des périodes sujettes à un avertissement par courriel.
 	Retourne: une liste de rangées-objets, exemple $row->periode_id
 	*/
 
+	// voir config.inc local
 	global $watched_projets;
 
 	$sql = sprintf(
@@ -62,10 +57,14 @@ function get_periodes_courriel(){
 				. "ON pp.user_id = pu.user_id "
 			. "LEFT JOIN planning_courriel as pc "
 				. "ON pp.periode_id = pc.periode_id "
-			. "WHERE pp.projet_id IN(%s) AND pc.ts_courriel IS NULL;",
+			. "WHERE pp.projet_id IN(%s) "
+			. "AND (pc.ts_courriel IS NULL OR pc.ts_courriel < (NOW() - INTERVAL %s));",
 		implode(',', array_map(
 			function($x){return "'$x'";},
-			array_keys($watched_projets)))
+			array_keys($watched_projets))),
+
+		// voir config.inc local
+		SOPLANNING_NOTIFICATION_INTERVAL
 	);
 	$res = db_query($sql);
 
@@ -80,6 +79,8 @@ function send_courriel($row_periode){
 	/*
 	Retourne: true/false -> "le courriel a bien été envoyé?"
 	*/
+
+	// voir config.inc local
 	global $watched_projets;
 
 	$body_data = array(
@@ -119,6 +120,10 @@ function send_courriel($row_periode){
 }
 
 function send_periodes_courriels(){
+	/*
+	Cette fonction est la "boucle principale" qui envoie un courriel
+	pour chaque ajout à planning_periode sur un projet surveillé.
+	*/
 
 	$rows_periodes = get_periodes_courriel();
 
