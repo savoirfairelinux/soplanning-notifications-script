@@ -25,3 +25,9 @@ UTILISATION
 	$ php5 notification.php
 
 	Fortement recommandé de définir une cron job.
+
+
+TODO
+
+	- Transformer cet outil en contribution SOPlanning
+	- Remplacer $watched_projets par une config à même l'interface SOPlanning

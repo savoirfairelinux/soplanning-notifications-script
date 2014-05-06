@@ -2,23 +2,44 @@
 # Mise en place initiale
 #
 
+0) Préalables
+
+	- Installer sur la même machine que SOPlanning
+	- Avoir un serveur de mail configuré sur le port 25
+	- Configuration SOPlanning essentielle: Paramètres > Configuration SMTP
+		IMPORTANT - Spécifier l'adresse du serveur, probablement localhost
+		IMPORTANT - Spécifier le port, probablement 25
+		Le champ "adresse d'expédition" n'est pas requis pour nos besoins du moment.
+
 1) Créer la table dans la BD
 
 	- Manuellement à partir de sql/planning_courriel.sql
 
 2) Copier config.example.inc dans config.inc et ajuster les paramètres.
 
-	- SOPLANNING_PATH
+	SOPLANNING_PATH
 		Chemin vers le répertoire racine de soplanning.
 		Peut être relatif ou absolu, à votre guise.
 
-	- SOPLANNING_NOTIFICATION_INTERVAL
+	SOPLANNING_NOTIFICATION_INTERVAL
 		Délai de sûreté pour détecter les entrées qui ont changé.
 		Au format d'intervale MySQL : 10 MINUTE'... '6 HOUR'... '1 DAY'... etc.
 		Voir http://dev.mysql.com/doc/refman/5.5/en/date-and-time-functions.html
 
+	$watched_projets
+		Respecter le format 'IDENTIFIANT_DU_PROJET' => 'COURRIEL_DU_RESPONSABLE'
+
+		Exemple
+			'abs' => 'sylvain.bouchard@savoirfairelinux.com'
+
+		Cet outil a été concu uniquement pour surveiller "conge/ abs",
+		mais pourrait avoir d'autres usages éventuellement.
+	
+
 3) Rouler un premier "dry run" pour initialiser la BD
 
-	- Il ne faudrait pas envoyer un milliard de courriels à cause des entrées passées !
+	Il ne faudrait pas envoyer un milliard de courriels à cause des entrées passées !
+
+	$ php5 notification.php --no-email
 
 4) Configurer la cron job

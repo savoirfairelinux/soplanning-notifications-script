@@ -41,6 +41,25 @@ while($configTemp = db_fetch_array($configs)) {
 }
 
 
+// par souci d'uniformité, $_GET accueille les paramètres de la ligne de commande
+parse_str(implode('&', array_slice($argv, 1)), $_GET);
+
+
+if(isset($_GET['--help'])){
+	echo "\n  Utilisation: php5 notification.php [options]";
+
+	echo "\n\n  --help: affiche ce message d'aide";
+	echo "\n  --no-email: met à jour la BD mais sans envoyer de courriel";
+	echo "\n";
+	exit;
+}
+
+// Désactiver les courriels
+define('ENABLE_EMAIL', ! isset($_GET['--no-email']) );
+
+
+
+
 function get_periodes_courriel(){
 	/*
 	Liste des périodes sujettes à un avertissement par courriel.
@@ -66,6 +85,9 @@ function get_periodes_courriel(){
 		// voir config.inc local
 		SOPLANNING_NOTIFICATION_INTERVAL
 	);
+	if(DEBUG){
+		echo $sql . "\n";
+	}
 	$res = db_query($sql);
 
 	$rows = array();
@@ -130,29 +152,40 @@ function send_periodes_courriels(){
 	foreach($rows_periodes as $row_periode){
 
 		// Envoyer courriel + mettre à jour table planning_courriel.
-		$mail_ok = send_courriel($row_periode);
+		if(ENABLE_EMAIL){
+			$mail_ok = send_courriel($row_periode);
+			$mail_msg = $mail_ok ? 'ok' : 'echec';
+		} else {
+			$mail_ok = true;
+			$mail_msg = "n/a";
+		}
+
 		if($mail_ok){
 			$sql = sprintf(
 				"INSERT INTO planning_courriel "
-						. "(periode_id, ts_courriel)"
+						. "(periode_id, ts_courriel) "
 					. "VALUES "
-					."	(%s,CURRENT_TIMESTAMP())"
+					."	(%s,CURRENT_TIMESTAMP()) "
 			  	. "ON DUPLICATE KEY UPDATE ts_courriel=CURRENT_TIMESTAMP();",
 			  	$row_periode->periode_id);
+			if(DEBUG){
+				echo $sql . "\n";
+			}
 			db_query($sql);
 		}
 
-		// Debugging info
+		// Results output
 		printf("[%s] %s %s - %s. Mail: %s\n", 
 			$row_periode->login,
 			$row_periode->projet_id,
 			$row_periode->date_debut,
 			$row_periode->date_fin,
-			$mail_ok?'ok':'echec');
+			$mail_msg);
 
 	}
 }
 
 send_periodes_courriels();
+
 
 ?>
