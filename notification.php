@@ -1,7 +1,7 @@
 <?php
 /**
  *  @file
- *  Brief description of what the file does, along with the project's name
+ *  Automated notification emails for selected SOPlanning projects. Standalone PHP script.
  * 
  *  @copyright 2014 Savoir-faire Linux, inc.
  *
